@@ -1,0 +1,4 @@
+FILE: files/application.log
+MAX-SIZE: 1024
+LEVEL: DEBUG
+FORMAT: [%s][%s] message: [%s]
