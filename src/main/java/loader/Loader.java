@@ -16,14 +16,11 @@ public class Loader {
         for (String line : lines) {
             if (line.contains("FILE: ")) {
                 file = line.split("FILE: ")[1];
-            }
-            if (line.contains("FORMAT: ")) {
+            } else if (line.contains("FORMAT: ")) {
                 format = line.split("FORMAT: ")[1];
-            }
-            if (line.contains("MAX-SIZE: ")) {
+            } else if (line.contains("MAX-SIZE: ")) {
                 maxFileSize = Integer.parseInt(line.split("MAX-SIZE: ")[1]);
-            }
-            if (line.contains("LEVEL: ")) {
+            } else if (line.contains("LEVEL: ")) {
                 loggingLevel = LoggingLevel.valueOf(line.split("LEVEL: ")[1]);
             }
         }
