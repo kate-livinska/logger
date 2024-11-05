@@ -61,9 +61,8 @@ public class FileLogger extends AbstractLogger implements Logger {
     }
 
     private String formatFileName(String nameFromConfig) {
-        String extension = nameFromConfig.substring(nameFromConfig.lastIndexOf("."));
-        String name = nameFromConfig.substring(0, nameFromConfig.lastIndexOf("."));
-        String formattedFileName = "%s_%s%s".formatted(name, formatDate(true), extension);
+        String[] lines = nameFromConfig.split("\\.");
+        String formattedFileName = "%s_%s.%s".formatted(lines[0], formatDate(true), lines[1]);
 
         return formattedFileName;
     }
