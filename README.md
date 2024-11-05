@@ -74,7 +74,8 @@ FORMAT: [%s][%s] message: [%s]
 ### Log Files
 If the file max size limit is exceeded, additional files will be created as necessary.
 The file name format will be as follows:
-user-defined-name_yyyy-MM-dd HH:mm:ss:SS.extention
+
+`user-defined-name_yyyy-MM-dd HH:mm:ss:SS.extention`
 
 ## Usage Example
 ```java
