@@ -1,91 +1,70 @@
 package logger;
 
+
+import config.FileLoggerConfiguration;
 import exception.FileMaxSizeReachedException;
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class FileLogger implements Logger {
-    private String fileName;
+public class FileLogger extends AbstractLogger implements Logger {
+    private final String fileName;
     private File file;
-    private LoggingLevel loggingLevel;
-    private long maxSize;
-    private String format;
+    private final long maxSize;
 
     public FileLogger(FileLoggerConfiguration config) {
+        super(config.getLoggingLevel(), config.getFormat());
         this.fileName = config.getFile();
-        this.loggingLevel = config.getLoggingLevel();
         this.maxSize = config.getMaxSizeInBytes();
-        this.format = config.getFormat() + "\n";
         file = new File(formatFileName(config.getFile()));
     }
 
     @Override
-    public void info(String message) throws RuntimeException {
+    public void info(String message) {
         checkFileSize(message);
         write(formatMessage("INFO", message));
 
     }
 
     @Override
-    public void debug(String message) throws RuntimeException {
-        if (loggingLevel == LoggingLevel.DEBUG) {
+    public void debug(String message) {
+        if (getLoggingLevel() == LoggingLevel.DEBUG) {
             checkFileSize(message);
             write(formatMessage("DEBUG", message));
         }
     }
 
-    private void checkFileSize(String message) {
-        long oldSize = file.length();
-        long newSize = oldSize + formatMessage("INFO", message).getBytes().length;
-        if (newSize > maxSize) {
-            file = new File(formatFileName(fileName));
-            try {
-                file.createNewFile();
-                throw new FileMaxSizeReachedException(
-                        "Maximal log size: " + maxSize + " bytes, current log size: "
-                                + oldSize + " bytes, path: " + file.getAbsolutePath());
-            } catch (FileMaxSizeReachedException e) {
-                System.out.println(e.getMessage() + " \nNew file created.");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void write(String message) {
+    @Override
+    protected void write(String message) {
         try (
                 Writer fwriter = new FileWriter(file, true);
                 BufferedWriter bwriter = new BufferedWriter(fwriter);
         ) {
             bwriter.write(message);
             bwriter.flush();
-        } catch (Exception e){
-            throw new RuntimeException(e);
+        } catch (IOException e){
+            System.out.println(e.getMessage());
         }
     }
 
-    private String formatDate(boolean milliseconds) {
-        String pattern;
-        if (milliseconds) {
-            pattern = "yyyy-MM-dd HH:mm:ss:SS";
-        } else {
-            pattern = "yyyy-MM-dd HH:mm:ss";
+    private void checkFileSize(String message) {
+        long oldSize = file.length();
+        long newSize = oldSize + formatMessage(getLoggingLevel().name(), message).getBytes().length;
+        try {
+            if (newSize > maxSize) {
+                file = new File(formatFileName(fileName));
+                throw new FileMaxSizeReachedException(
+                        "Maximal log size: " + maxSize + " bytes. Current size: "
+                                + oldSize + " bytes.\nPath: " + file.getPath());
+            }
+        } catch (FileMaxSizeReachedException e) {
+            System.out.println(e.getMessage() + " \nNew file created.");
         }
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        String date = formatter.format(new Date());
-        return date;
     }
 
-    private String formatFileName(String configFileName) {
-        String extension = configFileName.substring(configFileName.lastIndexOf("."));
-        String name = configFileName.substring(0, configFileName.lastIndexOf("."));
-        String fileName = "%s%s%s".formatted(name, formatDate(true), extension);
+    private String formatFileName(String nameFromConfig) {
+        String extension = nameFromConfig.substring(nameFromConfig.lastIndexOf("."));
+        String name = nameFromConfig.substring(0, nameFromConfig.lastIndexOf("."));
+        String formattedFileName = "%s%s%s".formatted(name, formatDate(true), extension);
 
-        return fileName;
-    }
-
-    private String formatMessage(String loggingLevel, String message) {
-        return String.format(format, formatDate(false), loggingLevel, message);
+        return formattedFileName;
     }
 }
