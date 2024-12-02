@@ -2,6 +2,9 @@ import loader.FileLoggerConfigurationLoader;
 import logger.FileLogger;
 import config.FileLoggerConfiguration;
 import logger.Logger;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
 //import logger.LoggingLevel;
 
 public class App {
@@ -9,8 +12,17 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         FileLoggerConfiguration conf;
-//        conf = new FileLoggerConfiguration("files/log.txt", LoggingLevel.DEBUG, 256, "[%s][%s] message: [%s]");
-        conf = new FileLoggerConfigurationLoader().load("files/config.txt");
+        /*
+         Creating configuration:
+         conf = new FileLoggerConfiguration("files/log.txt", LoggingLevel.DEBUG, 256, "[%s][%s] message: [%s]");
+        */
+
+        //Reading config from file:
+        final String configFilePath = "files/config.txt";
+
+        InputStream finputStream = new FileInputStream(configFilePath);
+
+        conf = new FileLoggerConfigurationLoader().load(finputStream);
 
         logger = new FileLogger(conf);
 
