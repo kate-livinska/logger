@@ -11,7 +11,7 @@ class FileLoggerConfigReaderUtil {
     private static int maxFileSize;
     private static String format;
 
-    public static void getConfigurationFields(BufferedInputStream inputStream) throws IOException {
+    public static void initConfigurationFields(BufferedInputStream inputStream) throws IOException {
         String content = read(inputStream);
 
         String[] lines = content.split("\n");

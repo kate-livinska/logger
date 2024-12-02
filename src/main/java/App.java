@@ -13,7 +13,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         FileLoggerConfiguration conf;
         /*
-         Creating configuration:
+         Creating configuration without config file:
          conf = new FileLoggerConfiguration("files/log.txt", LoggingLevel.DEBUG, 256, "[%s][%s] message: [%s]");
         */
 

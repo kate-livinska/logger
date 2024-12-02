@@ -13,8 +13,7 @@ public class FileLoggerConfigurationLoader {
         FileLoggerConfiguration config = null;
 
         try (BufferedInputStream bufferedInput = new BufferedInputStream(inputStream)) {
-            String content = FileLoggerConfigReaderUtil.read(bufferedInput);
-            getConfigurationFields(content);
+            initConfigurationFields(bufferedInput);
             config = new FileLoggerConfiguration(getFile(), getLoggingLevel(), getMaxFileSize(), getFormat());
         } catch (IOException e) {
             System.err.println("Error while reading configuration file.");
@@ -28,8 +27,8 @@ public class FileLoggerConfigurationLoader {
         return config;
     }
 
-    private void getConfigurationFields(String content) {
-        FileLoggerConfigReaderUtil.getConfigurationFields(content);
+    private void initConfigurationFields(BufferedInputStream inputStream) throws IOException {
+        FileLoggerConfigReaderUtil.initConfigurationFields(inputStream);
     }
     
     private String getFile() {
