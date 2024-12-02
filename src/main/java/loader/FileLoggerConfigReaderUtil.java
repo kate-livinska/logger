@@ -5,13 +5,13 @@ import logger.LoggingLevel;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 
-public class Loader {
-    private String file;
-    private LoggingLevel loggingLevel;
-    private int maxFileSize;
-    private String format;
+class FileLoggerConfigReaderUtil {
+    private static String file;
+    private static LoggingLevel loggingLevel;
+    private static int maxFileSize;
+    private static String format;
 
-    public void getConfigurationFields(String content) {
+    public static void getConfigurationFields(String content) {
         String[] lines = content.split("\n");
         for (String line : lines) {
             if (line.contains("FILE: ")) {
@@ -38,19 +38,19 @@ public class Loader {
         return content.toString();
     }
 
-    public String getFile() {
+    public static String getFile() {
         return file;
     }
 
-    public LoggingLevel getLoggingLevel() {
+    public static LoggingLevel getLoggingLevel() {
         return loggingLevel;
     }
 
-    public int getMaxFileSize() {
+    public static int getMaxFileSize() {
         return maxFileSize;
     }
 
-    public String getFormat() {
+    public static String getFormat() {
         return format;
     }
 }
