@@ -17,12 +17,6 @@ public class FileLoggerConfigurationLoader {
             config = new FileLoggerConfiguration(getFile(), getLoggingLevel(), getMaxFileSize(), getFormat());
         } catch (IOException e) {
             System.err.println("Error while reading configuration file.");
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                System.err.println("Error while closing input stream.");
-            }
         }
         return config;
     }
